@@ -1,37 +1,22 @@
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.stage.Stage;
-
-
-public class EngineeringImpactCrash extends  Application {
+// Plays a video represnting the theme of "Engineering Impact".
+// The original video can be found in the media folder of this project.
+public class EngineeringImpactCrash extends  javafx.application.Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
-	public void start(Stage stage) throws Exception {
-		File f = File.createTempFile("engineering", "mp4");
+	public void start(javafx.stage.Stage stage) throws Exception {
+		java.io.File f = java.io.File.createTempFile("engineering", "mp4");
 		f.deleteOnExit();
-		try (OutputStream out = new FileOutputStream(f)) {
+		try (java.io.FileOutputStream out = new java.io.FileOutputStream(f)) {
 			out.write(java.util.Base64.getDecoder().decode(ENCODED_DATA));
 		}
 		
-		Group root = new Group();
-		Media media = new Media(f.toURI().toString());
-		MediaPlayer player = new MediaPlayer(media);
-		MediaView view = new MediaView(player);
-		
-		root.getChildren().add(view);
-		Scene scene = new Scene(root, 1280, 720);
+		javafx.scene.Group root = new javafx.scene.Group();
+		javafx.scene.media.MediaPlayer player = new javafx.scene.media.MediaPlayer(new javafx.scene.media.Media(f.toURI().toString()));
+		root.getChildren().add(new javafx.scene.media.MediaView(player));
 		stage.setTitle("Engineering Impact");
-		stage.setScene(scene);
+		stage.setScene(new javafx.scene.Scene(root, 1280, 720));
 		stage.show();
 		
 		player.play();
