@@ -16,13 +16,13 @@ public class Player extends  Application {
 	
 	public void start(Stage stage) throws Exception {
 		Group root = new Group();
-		String path = "media/Understanding_SQL_Server_Execution_Plans_c_1000.mp4";
+		String path = "D:\\temp\\temp3.mp4";
 		Media media = new Media(new File(path).toURI().toString());
 		MediaPlayer player = new MediaPlayer(media);
 		MediaView view = new MediaView(player);
 		
 		root.getChildren().add(view);
-		Scene scene = new Scene(root, 1920, 1080);
+		Scene scene = new Scene(root, 100, 100);
 		stage.setScene(scene);
 		stage.show();
 		

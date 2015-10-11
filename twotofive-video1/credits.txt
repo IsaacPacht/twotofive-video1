@@ -7,3 +7,9 @@
 	https://www.youtube.com/watch?v=tEx327rqztg
 * Camera shake, and initial blender file
 	http://www.blenderguru.com/tutorials/creating-camera-shake/
+* JavaFX supported media types, and format conversion
+	https://docs.oracle.com/javafx/2/api/javafx/scene/media/package-summary.html
+	http://blenderartists.org/forum/archive/index.php/t-213796.html?s=6121584c4465ace083aa654dedbcb940
+	http://superuser.com/questions/525249/convert-avi-to-mp4-keeping-the-same-quality
+		ffmpeg -i input.avi -c:v libx264 -crf 19 -preset slow -c:a aac -strict experimental -b:a 192k -ac 2 out.mp4
+	
