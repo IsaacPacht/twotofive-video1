@@ -1,3 +1,4 @@
+package tools;
 import java.io.File;
 
 import javafx.application.Application;
@@ -9,7 +10,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
 
-public class Player extends  Application {
+public class VideoDimensionCapturer extends  Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -22,10 +23,20 @@ public class Player extends  Application {
 		MediaView view = new MediaView(player);
 		
 		root.getChildren().add(view);
-		Scene scene = new Scene(root, 1920, 1080);
+		Scene scene = new Scene(root, 1000, 700);
 		stage.setScene(scene);
 		stage.show();
 		
 		player.play();
+		player.setOnReady(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println(player.getMedia().getWidth());
+				System.out.println(player.getMedia().getHeight());
+				
+			}
+		});
+		
 	}
+
 }
