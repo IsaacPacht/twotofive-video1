@@ -1,7 +1,9 @@
+
 * Creating a video player in JavaFX:
 	https://www.youtube.com/watch?v=bWl98dhvf8Q
 * How to get around Eclipse restriction on using JavaFX classes
 	http://stackoverflow.com/questions/24743027/eclipse-gives-warning-on-access-restriction-for-jfxrt-jar-classes
 * Add sound to blender video
 	https://www.youtube.com/watch?v=tEx327rqztg
-	
+* Camera shake, and initial blender file
+	http://www.blenderguru.com/tutorials/creating-camera-shake/
