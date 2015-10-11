@@ -12,4 +12,7 @@
 	http://blenderartists.org/forum/archive/index.php/t-213796.html?s=6121584c4465ace083aa654dedbcb940
 	http://superuser.com/questions/525249/convert-avi-to-mp4-keeping-the-same-quality
 		ffmpeg -i input.avi -c:v libx264 -crf 19 -preset slow -c:a aac -strict experimental -b:a 192k -ac 2 out.mp4
+* sounds
+	http://soundbible.com/283-Molotov-Cocktail-Bomb.html
+	http://www.grsites.com/archive/sounds/category/23/?offset=96
 	

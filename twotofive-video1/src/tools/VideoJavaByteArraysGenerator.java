@@ -8,7 +8,7 @@ import java.util.Base64;
 
 public class VideoJavaByteArraysGenerator {
 	public static void main(String[] args) throws IOException {
-		String filename = "D:\\Data\\workspaces\\uib\\Engineering-Impact\\media\\Engineering-Impact0001-0022.mp4";
+		String filename = "D:\\git\\twotofive-video1\\twotofive-video1\\media\\Engineering-Impact-Crash.mp4";
 		Path path = Paths.get(filename);
 	    byte[] bytes = Files.readAllBytes(path);
 	    String base64 = Base64.getEncoder().encodeToString(bytes);
