@@ -10,6 +10,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
@@ -35,6 +36,10 @@ public class CubeDemo extends Application {
     public void start(Stage primaryStage) {
 
     	StackPane root = new StackPane();
+//    	root.layoutXProperty().bind(primaryStage.xProperty());
+    	root.setLayoutX(20);
+    	root.setLayoutY(20);
+    	root.setAlignment(Pos.TOP_LEFT);
     	
         
     	Group[][] cubes = new Group[3][3]; 
@@ -49,7 +54,7 @@ public class CubeDemo extends Application {
         }
         
         
-        Scene scene = new Scene(root, 500, 500, true);
+        Scene scene = new Scene(root, 570, 570, true);
         scene.setCamera(new PerspectiveCamera());
         primaryStage.setResizable(true);
         primaryStage.setTitle("Cube Demo");
