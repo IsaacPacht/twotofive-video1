@@ -5,7 +5,6 @@
 
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -25,7 +24,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -45,13 +43,13 @@ public class CubeDemo extends Application {
     	root.setLayoutY(20);
     	root.setAlignment(Pos.TOP_LEFT);
         
-    	Group[] cubes = new Group[9]; 
+    	Group[] tiles = new Group[9]; 
         for (int i = 0; i < 9; i++) {
-		        Group cube = createCube(i);
-		        addOffset(cube, i);
-		        root.getChildren().add(cube);
-		        cubes[i] = cube;
-		        animateCube(cube, i);
+		        Group tile = createTile(i);
+		        addOffset(tile, i);
+		        root.getChildren().add(tile);
+		        tiles[i] = tile;
+		        animateTile(tile, i);
         }
         
         
@@ -63,28 +61,21 @@ public class CubeDemo extends Application {
         stage.show();
     }
 
-	private void animateCube(Group cube, int i) {
-		int x = i/3;
-		int y = i%3;
+	private void animateTile(Group tile, int i) {
 		Timeline animation = new Timeline();
 		Point3D axis1, axis2;
 		
-		if (((x-y) & 1) == 0) {
-			axis1 = Rotate.Y_AXIS;
-			axis2 = Rotate.Z_AXIS;
-		} else {
-			axis1 = Rotate.X_AXIS;
-			axis2 = Rotate.Y_AXIS;
-		}
+			axis1 = ((i/3-(i%3)) & 1) == 1 ? Rotate.Y_AXIS : Rotate.X_AXIS;  
+			axis2 = ((i/3-(i%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS;
 		
 		animation.getKeyFrames().addAll(
                 new KeyFrame(Duration.ZERO,
-	                new KeyValue(cube.rotationAxisProperty(), axis1),
-	                new KeyValue(cube.rotateProperty(), 0d)),
+	                new KeyValue(tile.rotationAxisProperty(), axis2),
+	                new KeyValue(tile.rotateProperty(), 0d)),
                 new KeyFrame(Duration.seconds(5),
-	                new KeyValue(cube.rotationAxisProperty(), axis2),
-	                new KeyValue(cube.rotateProperty(), 360d)));
-        animation.setCycleCount(Animation.INDEFINITE);
+	                new KeyValue(tile.rotationAxisProperty(), axis2),
+	                new KeyValue(tile.rotateProperty(), 180d)));
+//        animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
 	}
 
@@ -93,7 +84,7 @@ public class CubeDemo extends Application {
 		cube.setTranslateY(i%3 * (size + 2));
 	}
 
-	private Group createCube(int n) {
+	private Group createTile(int n) {
 		return GroupBuilder.create().<Group>children(Arrays.<Node>asList(new Node[] {
                 RectangleBuilder.create() // back face
                 .width(size).height(size)
