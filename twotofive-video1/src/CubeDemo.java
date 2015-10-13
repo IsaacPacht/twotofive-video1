@@ -40,7 +40,7 @@ public class CubeDemo extends Application {
     	Group[][] cubes = new Group[3][3]; 
         for (int i = 0; i < 3; i++) {
         	for (int j = 0; j < 3; j++) {
-		        Group cube = createCube();
+		        Group cube = createCube(i,j);
 		        addOffset(cube, i, j);
 		        root.getChildren().add(cube);
 		        cubes[i][j] = cube;
@@ -65,8 +65,8 @@ public class CubeDemo extends Application {
 			axis1 = Rotate.Y_AXIS;
 			axis2 = Rotate.Z_AXIS;
 		} else {
-			axis1 = Rotate.Z_AXIS;
-			axis2 = Rotate.X_AXIS;
+			axis1 = Rotate.X_AXIS;
+			axis2 = Rotate.Y_AXIS;
 		}
 		
 		animation.getKeyFrames().addAll(
@@ -85,12 +85,12 @@ public class CubeDemo extends Application {
 		cube.setTranslateY(y * (size + 2));
 	}
 
-	private Group createCube() {
+	private Group createCube(int i, int j) {
 		Group cube = new Group();
         cube.getChildren().addAll(
                 RectangleBuilder.create() // back face
                 .width(size).height(size)
-                .fill(color.deriveColor(0.0, 1.0, (1 - 0.5 * 1), 1.0))
+                .fill(new ImagePattern(new Image("file:media/firsthand-"+j+"-"+i+".png")))
                 .translateX(-0.5 * size)
                 .translateY(-0.5 * size)
                 .translateZ(0.5 * shortsize)
@@ -129,7 +129,7 @@ public class CubeDemo extends Application {
                 .build(),
                 RectangleBuilder.create() // front face
                 .width(size).height(size)
-                .fill(new ImagePattern(new Image("file:media/cerner.png"),  0, 0, 0.33f, 0.33f, true))
+                .fill(new ImagePattern(new Image("file:media/cerner-"+j+"-"+i+".png")))
                 .translateX(-0.5 * size)
                 .translateY(-0.5 * size)
                 .translateZ(-0.5 * shortsize)
