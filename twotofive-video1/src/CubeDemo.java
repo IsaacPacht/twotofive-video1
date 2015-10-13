@@ -1,15 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.swing.GroupLayout.SequentialGroup;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TimelineBuilder;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
@@ -18,124 +21,120 @@ import javafx.scene.GroupBuilder;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.SceneBuilder;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.StackPaneBuilder;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.stage.StageBuilder;
 import javafx.util.Duration;
+import javafx.event.EventHandler;
 
 public class CubeDemo extends Application {
+	private static int[] tilePos = {0,1,2,3,4,5,6,7};
+	private static int emptyPos = 8;
+	private static boolean[] tileFaceUp = {true,true,true,true,true,true,true,true};
 
-    
+	private static final List<Group> tiles = IntStream.range(0, 8).mapToObj(i -> GroupBuilder.create().<Group>children(Arrays.<Node>asList(new Node[] {
+	        RectangleBuilder.create() // back face
+	        .width((double) 175).height((double) 175)
+	        .fill(new ImagePattern(new Image("file:media/firsthand-"+(i/3)+"-"+(i%3)+".png")))
+	        .translateX(-0.5 * (double) 175)
+	        .translateY(-0.5 * (double) 175)
+	        .translateZ(0.5 * (double) 20)
+	        .build(),
+	        RectangleBuilder.create() // bottom face
+	        .width((double) 175).height((double) 20)
+	        .fill(Color.DARKBLUE.deriveColor(0.0, 1.0, (1 - 0.4 * 1), 1.0))
+	        .translateX(-0.5 * (double) 175)
+	        .translateY(0.5 * ((double) 175 - (double) 20))
+	        .rotationAxis(Rotate.X_AXIS)
+	        .rotate(90)
+	        .build(),
+	        RectangleBuilder.create() // right face
+	        .width((double) 20).height((double) 175)
+	        .fill(Color.DARKBLUE.deriveColor(0.0, 1.0, (1 - 0.3 * 1), 1.0))
+	        .translateX(0.5 * ((double) 175-(double) 20))
+	        .translateY(-0.5 * (double) 175)
+	        .rotationAxis(Rotate.Y_AXIS)
+	        .rotate(90)
+	        .build(),
+	        RectangleBuilder.create() // left face
+	        .width((double) 20).height((double) 175)
+	        .fill(Color.DARKBLUE.deriveColor(0.0, 1.0, (1 - 0.2 * 1), 1.0))
+	        .translateX(-0.5 * ((double) 175+(double) 20))
+	        .translateY(-0.5 * ((double) 175))
+	        .rotationAxis(Rotate.Y_AXIS)
+	        .rotate(90)
+	        .build(),
+	        RectangleBuilder.create() // top face
+	        .width((double) 175).height((double) 20)
+	        .fill(Color.DARKBLUE.deriveColor(0.0, 1.0, (1 - 0.1 * 1), 1.0))
+	        .translateX(-0.5 * (double) 175)
+	        .translateY(-0.5 * ((double) 175+(double) 20))
+	        .rotationAxis(Rotate.X_AXIS)
+	        .rotate(90)
+	        .build(),
+	        RectangleBuilder.create() // front face
+	        .width((double) 175).height((double) 175)
+	        .fill(new ImagePattern(new Image("file:media/cerner-"+(i/3)+"-"+(i%3)+".png")))
+	        .translateX(-0.5 * (double) 175)
+	        .translateY(-0.5 * (double) 175)
+	        .translateZ(-0.5 * (double) 20)
+	        .build()
+	}))
+	.onMouseClicked(e ->  {createAnimation(i).play();})
+	.translateX(i%3 * ((double) 175 + 2))
+	.translateY(i/3 * ((double) 175 + 2))
+	.build())
+	.collect(Collectors.toList());
 
-    double size = 175;
-    double shortsize = 20;
-    Color color = Color.DARKBLUE;
-
-    @Override
     public void start(Stage stage) {
 
-    	StackPane root = new StackPane();
-    	root.setLayoutX(20);
-    	root.setLayoutY(20);
-    	root.setAlignment(Pos.TOP_LEFT);
-        
-    	Group[] tiles = new Group[9]; 
-        for (int i = 0; i < 9; i++) {
-		        Group tile = createTile(i);
-		        addOffset(tile, i);
-		        root.getChildren().add(tile);
-		        tiles[i] = tile;
-		        animateTile(tile, i);
-        }
-        
-        
-        Scene scene = new Scene(root, 570, 570, true);
-        scene.setCamera(new PerspectiveCamera());
-        stage.setResizable(true);
-        stage.setTitle("Cerner and First Hand");
-        stage.setScene(scene);
-        stage.show();
+    	StageBuilder.create().title("Cerner and First Hand").scene(SceneBuilder.create().root(
+        		StackPaneBuilder.create()
+    			.layoutX(20)
+    			.layoutY(20)
+    			.alignment(Pos.TOP_LEFT)
+    			.children(tiles)
+    			.build()
+        		).camera(new PerspectiveCamera()).width(570).height(570).depthBuffer(true).build()).build().show();
+    	
+    }
+    
+    private static Animation createAnimation(int tileIndex) {
+    	int targetPos = emptyPos;
+    	int currentPos = tilePos[tileIndex];
+    	boolean currentlyFaceUp = tileFaceUp[tileIndex];
+    	ParallelTransition parallelTransition = new ParallelTransition(
+        		TimelineBuilder.create().keyFrames(
+			        new KeyFrame(Duration.ZERO,
+			            new KeyValue(tiles.get(tileIndex).translateXProperty(), currentPos%3*175),
+			            new KeyValue(tiles.get(tileIndex).translateYProperty(), currentPos/3*175)),
+			        new KeyFrame(Duration.seconds(1),
+			            new KeyValue(tiles.get(tileIndex).translateXProperty(), targetPos%3*175),
+			            new KeyValue(tiles.get(tileIndex).translateYProperty(), targetPos/3*175)))
+			    .build(),
+			    TimelineBuilder.create().keyFrames(
+				    new KeyFrame(Duration.ZERO,
+				        new KeyValue(tiles.get(tileIndex).rotationAxisProperty(), ((tileIndex/3-(tileIndex%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS),
+				        new KeyValue(tiles.get(tileIndex).rotateProperty(), currentlyFaceUp ? 0d : 180d)),
+				    new KeyFrame(Duration.seconds(1),
+				        new KeyValue(tiles.get(tileIndex).rotationAxisProperty(), ((tileIndex/3-(tileIndex%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS),
+				        new KeyValue(tiles.get(tileIndex).rotateProperty(), currentlyFaceUp ? 180d : 360d)))
+				.build());
+    	
+    	tileFaceUp[tileIndex] = !tileFaceUp[tileIndex];
+    	emptyPos = currentPos;
+    	tilePos[tileIndex] = targetPos;
+		return parallelTransition;
     }
 
-	private void animateTile(Group tile, int i) {
-		Timeline animation = new Timeline();
-		Point3D axis1, axis2;
-		
-			axis1 = ((i/3-(i%3)) & 1) == 1 ? Rotate.Y_AXIS : Rotate.X_AXIS;  
-			axis2 = ((i/3-(i%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS;
-		
-		animation.getKeyFrames().addAll(
-                new KeyFrame(Duration.ZERO,
-	                new KeyValue(tile.rotationAxisProperty(), axis2),
-	                new KeyValue(tile.rotateProperty(), 0d)),
-                new KeyFrame(Duration.seconds(5),
-	                new KeyValue(tile.rotationAxisProperty(), axis2),
-	                new KeyValue(tile.rotateProperty(), 180d)));
-//        animation.setCycleCount(Animation.INDEFINITE);
-        animation.play();
-	}
-
-	private void addOffset(Group cube, int i) {
-		cube.setTranslateX(i/3 * (size + 2));
-		cube.setTranslateY(i%3 * (size + 2));
-	}
-
-	private Group createTile(int n) {
-		return GroupBuilder.create().<Group>children(Arrays.<Node>asList(new Node[] {
-                RectangleBuilder.create() // back face
-                .width(size).height(size)
-                .fill(new ImagePattern(new Image("file:media/firsthand-"+(n%3)+"-"+(n/3)+".png")))
-                .translateX(-0.5 * size)
-                .translateY(-0.5 * size)
-                .translateZ(0.5 * shortsize)
-                .build(),
-                RectangleBuilder.create() // bottom face
-                .width(size).height(shortsize)
-                .fill(color.deriveColor(0.0, 1.0, (1 - 0.4 * 1), 1.0))
-                .translateX(-0.5 * size)
-                .translateY(0.5 * (size - shortsize))
-                .rotationAxis(Rotate.X_AXIS)
-                .rotate(90)
-                .build(),
-                RectangleBuilder.create() // right face
-                .width(shortsize).height(size)
-                .fill(color.deriveColor(0.0, 1.0, (1 - 0.3 * 1), 1.0))
-                .translateX(0.5 * (size-shortsize))
-                .translateY(-0.5 * size)
-                .rotationAxis(Rotate.Y_AXIS)
-                .rotate(90)
-                .build(),
-                RectangleBuilder.create() // left face
-                .width(shortsize).height(size)
-                .fill(color.deriveColor(0.0, 1.0, (1 - 0.2 * 1), 1.0))
-                .translateX(-0.5 * (size+shortsize))
-                .translateY(-0.5 * (size))
-                .rotationAxis(Rotate.Y_AXIS)
-                .rotate(90)
-                .build(),
-                RectangleBuilder.create() // top face
-                .width(size).height(shortsize)
-                .fill(color.deriveColor(0.0, 1.0, (1 - 0.1 * 1), 1.0))
-                .translateX(-0.5 * size)
-                .translateY(-0.5 * (size+shortsize))
-                .rotationAxis(Rotate.X_AXIS)
-                .rotate(90)
-                .build(),
-                RectangleBuilder.create() // front face
-                .width(size).height(size)
-                .fill(new ImagePattern(new Image("file:media/cerner-"+(n%3)+"-"+(n/3)+".png")))
-                .translateX(-0.5 * size)
-                .translateY(-0.5 * size)
-                .translateZ(-0.5 * shortsize)
-                .build()
-		})).build();
-	}
-
-    public static void main(String[] args) {
+	public static void main(String[] args) {
         launch(args);
     }
 }
