@@ -49,7 +49,7 @@ public class CubeDemo extends Application {
         }
         
         
-        Scene scene = new Scene(root, 300, 250, true);
+        Scene scene = new Scene(root, 500, 500, true);
         scene.setCamera(new PerspectiveCamera());
         primaryStage.setResizable(true);
         primaryStage.setTitle("Cube Demo");
