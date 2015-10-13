@@ -4,6 +4,9 @@
  */
 
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -12,6 +15,8 @@ import javafx.application.Application;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.GroupBuilder;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -30,39 +35,37 @@ public class CubeDemo extends Application {
 
     double size = 175;
     double shortsize = 20;
-    Color color = Color.DARKCYAN;
+    Color color = Color.DARKBLUE;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
 
     	StackPane root = new StackPane();
-//    	root.layoutXProperty().bind(primaryStage.xProperty());
     	root.setLayoutX(20);
     	root.setLayoutY(20);
     	root.setAlignment(Pos.TOP_LEFT);
-    	
         
-    	Group[][] cubes = new Group[3][3]; 
-        for (int i = 0; i < 3; i++) {
-        	for (int j = 0; j < 3; j++) {
-		        Group cube = createCube(i,j);
-		        addOffset(cube, i, j);
+    	Group[] cubes = new Group[9]; 
+        for (int i = 0; i < 9; i++) {
+		        Group cube = createCube(i);
+		        addOffset(cube, i);
 		        root.getChildren().add(cube);
-		        cubes[i][j] = cube;
-		        animateCube(cube, i, j);
-        	}
+		        cubes[i] = cube;
+		        animateCube(cube, i);
         }
         
         
         Scene scene = new Scene(root, 570, 570, true);
         scene.setCamera(new PerspectiveCamera());
-        primaryStage.setResizable(true);
-        primaryStage.setTitle("Cube Demo");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setResizable(true);
+        stage.setTitle("Cerner and First Hand");
+        stage.setScene(scene);
+        stage.show();
     }
 
-	private void animateCube(Group cube, int x, int y) {
+	private void animateCube(Group cube, int i) {
+		int x = i/3;
+		int y = i%3;
 		Timeline animation = new Timeline();
 		Point3D axis1, axis2;
 		
@@ -85,24 +88,23 @@ public class CubeDemo extends Application {
         animation.play();
 	}
 
-	private void addOffset(Group cube, int x, int y) {
-		cube.setTranslateX(x * (size + 2));
-		cube.setTranslateY(y * (size + 2));
+	private void addOffset(Group cube, int i) {
+		cube.setTranslateX(i/3 * (size + 2));
+		cube.setTranslateY(i%3 * (size + 2));
 	}
 
-	private Group createCube(int i, int j) {
-		Group cube = new Group();
-        cube.getChildren().addAll(
+	private Group createCube(int n) {
+		return GroupBuilder.create().<Group>children(Arrays.<Node>asList(new Node[] {
                 RectangleBuilder.create() // back face
                 .width(size).height(size)
-                .fill(new ImagePattern(new Image("file:media/firsthand-"+j+"-"+i+".png")))
+                .fill(new ImagePattern(new Image("file:media/firsthand-"+(n%3)+"-"+(n/3)+".png")))
                 .translateX(-0.5 * size)
                 .translateY(-0.5 * size)
                 .translateZ(0.5 * shortsize)
                 .build(),
                 RectangleBuilder.create() // bottom face
                 .width(size).height(shortsize)
-                .fill(Color.RED.deriveColor(0.0, 1.0, (1 - 0.4 * 1), 1.0))
+                .fill(color.deriveColor(0.0, 1.0, (1 - 0.4 * 1), 1.0))
                 .translateX(-0.5 * size)
                 .translateY(0.5 * (size - shortsize))
                 .rotationAxis(Rotate.X_AXIS)
@@ -110,7 +112,7 @@ public class CubeDemo extends Application {
                 .build(),
                 RectangleBuilder.create() // right face
                 .width(shortsize).height(size)
-                .fill(Color.YELLOW.deriveColor(0.0, 1.0, (1 - 0.3 * 1), 1.0))
+                .fill(color.deriveColor(0.0, 1.0, (1 - 0.3 * 1), 1.0))
                 .translateX(0.5 * (size-shortsize))
                 .translateY(-0.5 * size)
                 .rotationAxis(Rotate.Y_AXIS)
@@ -118,7 +120,7 @@ public class CubeDemo extends Application {
                 .build(),
                 RectangleBuilder.create() // left face
                 .width(shortsize).height(size)
-                .fill(Color.PINK.deriveColor(0.0, 1.0, (1 - 0.2 * 1), 1.0))
+                .fill(color.deriveColor(0.0, 1.0, (1 - 0.2 * 1), 1.0))
                 .translateX(-0.5 * (size+shortsize))
                 .translateY(-0.5 * (size))
                 .rotationAxis(Rotate.Y_AXIS)
@@ -126,7 +128,7 @@ public class CubeDemo extends Application {
                 .build(),
                 RectangleBuilder.create() // top face
                 .width(size).height(shortsize)
-                .fill(Color.BLACK.deriveColor(0.0, 1.0, (1 - 0.1 * 1), 1.0))
+                .fill(color.deriveColor(0.0, 1.0, (1 - 0.1 * 1), 1.0))
                 .translateX(-0.5 * size)
                 .translateY(-0.5 * (size+shortsize))
                 .rotationAxis(Rotate.X_AXIS)
@@ -134,22 +136,14 @@ public class CubeDemo extends Application {
                 .build(),
                 RectangleBuilder.create() // front face
                 .width(size).height(size)
-                .fill(new ImagePattern(new Image("file:media/cerner-"+j+"-"+i+".png")))
+                .fill(new ImagePattern(new Image("file:media/cerner-"+(n%3)+"-"+(n/3)+".png")))
                 .translateX(-0.5 * size)
                 .translateY(-0.5 * size)
                 .translateZ(-0.5 * shortsize)
-                .build());
-		return cube;
+                .build()
+		})).build();
 	}
 
-    /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
-     *
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         launch(args);
     }
