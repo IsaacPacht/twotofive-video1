@@ -13,18 +13,16 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.RectangleBuilder;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-/**
- *
- * @author Saravanababu
- */
 public class CubeDemo extends Application {
 
     
@@ -131,7 +129,7 @@ public class CubeDemo extends Application {
                 .build(),
                 RectangleBuilder.create() // front face
                 .width(size).height(size)
-                .fill(Color.PURPLE)
+                .fill(new ImagePattern(new Image("file:media/cerner.png"),  0, 0, 0.33f, 0.33f, true))
                 .translateX(-0.5 * size)
                 .translateY(-0.5 * size)
                 .translateZ(-0.5 * shortsize)
