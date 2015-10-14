@@ -53,7 +53,7 @@ public class CubeDemo extends Application {
 	        .translateX(-0.5 * (double) 175)
 	        .translateY(0.5 * ((double) 175 - (double) 20))
 	        .rotationAxis(Rotate.X_AXIS)
-	        .rotate(90)
+	        .rotate(93)
 	        .build(),
 	        RectangleBuilder.create() // right face
 	        .width((double) 20).height((double) 175)
@@ -61,7 +61,7 @@ public class CubeDemo extends Application {
 	        .translateX(0.5 * ((double) 175-(double) 20))
 	        .translateY(-0.5 * (double) 175)
 	        .rotationAxis(Rotate.Y_AXIS)
-	        .rotate(90)
+	        .rotate(93)
 	        .build(),
 	        RectangleBuilder.create() // left face
 	        .width((double) 20).height((double) 175)
@@ -69,7 +69,7 @@ public class CubeDemo extends Application {
 	        .translateX(-0.5 * ((double) 175+(double) 20))
 	        .translateY(-0.5 * ((double) 175))
 	        .rotationAxis(Rotate.Y_AXIS)
-	        .rotate(90)
+	        .rotate(93)
 	        .build(),
 	        RectangleBuilder.create() // top face
 	        .width((double) 175).height((double) 20)
@@ -77,7 +77,7 @@ public class CubeDemo extends Application {
 	        .translateX(-0.5 * (double) 175)
 	        .translateY(-0.5 * ((double) 175+(double) 20))
 	        .rotationAxis(Rotate.X_AXIS)
-	        .rotate(90)
+	        .rotate(93)
 	        .build(),
 	        RectangleBuilder.create() // front face
 	        .width((double) 175).height((double) 175)
