@@ -1865,6 +1865,7 @@ public class LogoPuzzle extends javafx.application.Application {
 	        .build()
 	}))
 	.onMouseClicked(e ->  moveOrFlipTile(i, e))
+	.pickOnBounds(true)
 	.translateX(i%3 * ((double) 175 + 2))
 	.translateY(i/3 * ((double) 175 + 2))
 	.build())
