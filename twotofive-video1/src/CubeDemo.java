@@ -1,3 +1,4 @@
+// Left click tiles to move.  Right click to flip.  Have fun!
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -37,9 +38,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 
 public class CubeDemo extends Application {
-	private static int[] tilePos = {0,1,2,3,4,5,6,7};
-	private static int emptyPos = 8;
-	private static boolean[] tileFaceUp = {true,true,true,true,true,true,true,true};
+	private static int emptyPos = 8, tilePos[] = {0,1,2,3,4,5,6,7}, tileFaceUp[] = {1,1,1,1,1,1,1,1};
 
 	private static final List<Group> tiles = IntStream.range(0, 8).mapToObj(i -> GroupBuilder.create().<Group>children(Arrays.<Node>asList(new Node[] {
 	        RectangleBuilder.create() // back face
@@ -108,29 +107,27 @@ public class CubeDemo extends Application {
     }
     
     private static void moveOrFlipTile(int tileIndex, MouseEvent e) {
-		boolean move = e.getButton() == MouseButton.SECONDARY;
-    	if (move) {
+		if (e.getButton() == MouseButton.PRIMARY) {
         	int targetPos = emptyPos;
-        	int currentPos = tilePos[tileIndex];
-        		TimelineBuilder.create().keyFrames(
+        	TimelineBuilder.create().keyFrames(
 			        new KeyFrame(Duration.ZERO,
-			            new KeyValue(tiles.get(tileIndex).translateXProperty(), currentPos%3*177),
-			            new KeyValue(tiles.get(tileIndex).translateYProperty(), currentPos/3*177)),
+			            new KeyValue(tiles.get(tileIndex).translateXProperty(), tilePos[tileIndex]%3*177),
+			            new KeyValue(tiles.get(tileIndex).translateYProperty(), tilePos[tileIndex]/3*177)),
 			        new KeyFrame(Duration.seconds(1),
 			            new KeyValue(tiles.get(tileIndex).translateXProperty(), targetPos%3*177),
 			            new KeyValue(tiles.get(tileIndex).translateYProperty(), targetPos/3*177)))
 			    .build().play();
-            	emptyPos = currentPos;
-            	tilePos[tileIndex] = targetPos;
+            emptyPos = tilePos[tileIndex];
+            tilePos[tileIndex] = targetPos;
     	} else {
-    		tileFaceUp[tileIndex] = !tileFaceUp[tileIndex];
+    		tileFaceUp[tileIndex] = -1 * tileFaceUp[tileIndex];
 		    TimelineBuilder.create().keyFrames(
 				    new KeyFrame(Duration.ZERO,
 				        new KeyValue(tiles.get(tileIndex).rotationAxisProperty(), ((tileIndex/3-(tileIndex%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS),
-				        new KeyValue(tiles.get(tileIndex).rotateProperty(), !tileFaceUp[tileIndex] ? 0d : 180d)),
+				        new KeyValue(tiles.get(tileIndex).rotateProperty(), tileFaceUp[tileIndex] < 0 ? 0d : 180d)),
 				    new KeyFrame(Duration.seconds(1),
 				        new KeyValue(tiles.get(tileIndex).rotationAxisProperty(), ((tileIndex/3-(tileIndex%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS),
-				        new KeyValue(tiles.get(tileIndex).rotateProperty(), !tileFaceUp[tileIndex] ? 180d : 360d)))
+				        new KeyValue(tiles.get(tileIndex).rotateProperty(), tileFaceUp[tileIndex] < 0  ? 180d : 360d)))
 				.build().play();
     	}
     }
