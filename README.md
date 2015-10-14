@@ -3,6 +3,7 @@ This repository contains several, independent submissions:
 * twotofive-video1/src/EngineeringImpactCrash.java
 * twotofive-video1/src/EngineeringImpactThud.java
 * twotofive-video1/src/FirstHandImages.java
+* twotofive-video1/src/LogoPuzzle.java
 
 The repository also contains various other files and utilites used in the process of creating the submissions. However, these additional files are not necessary for running the actual submission classes, which are completely self contained.
 
