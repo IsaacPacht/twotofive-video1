@@ -37,6 +37,7 @@ import javafx.util.Duration;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 
+// Class declaration and two static imports = 3 statements - total = 3
 public class CubeDemo extends Application {
 	private static int emptyPos = 8, tilePos[] = {0,1,2,3,4,5,6,7}, tileFaceUp[] = {1,1,1,1,1,1,1,1};
 
@@ -94,6 +95,7 @@ public class CubeDemo extends Application {
 	.build())
 	.collect(Collectors.toList());
 
+	// Start method being/end brackets and one statement of content = 3 statements - total = 6
     public void start(Stage stage) {
     	StageBuilder.create().title("Cerner and First Hand").scene(SceneBuilder.create().root(
         		StackPaneBuilder.create()
@@ -106,6 +108,7 @@ public class CubeDemo extends Application {
         		).camera(new PerspectiveCamera()).width(570).height(570).depthBuffer(true).build()).build().show();
     }
     
+    // moveOrFlip method being/end brackets and 10 statements of content = 10 statements - total = 16
     private static void moveOrFlipTile(int tileIndex, MouseEvent e) {
 		if (e.getButton() == MouseButton.PRIMARY) {
         	int targetPos = emptyPos;
@@ -132,6 +135,7 @@ public class CubeDemo extends Application {
     	}
     }
 
+    // main method being/end brackets and 1 statement of content = 3 statements - total = 19
 	public static void main(String[] args) {
         launch(args);
     }
