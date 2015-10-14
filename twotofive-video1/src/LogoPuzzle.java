@@ -1,7 +1,7 @@
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
 
-// Class declaration and two static imports = 3 statements - total = 3
+// Class declaration and three static imports = 4 statements - total = 4
 public class LogoPuzzle extends javafx.application.Application {
 	private static int emptyPos = 8, tilePos[] = {0,1,2,3,4,5,6,7}, tileFaceUp[] = {1,1,1,1,1,1,1,1};
 
@@ -1870,7 +1870,7 @@ public class LogoPuzzle extends javafx.application.Application {
 	.build())
 	.collect(java.util.stream.Collectors.toList());
 
-	// Start method begin/end brackets and one statement of content = 3 statements - total = 6
+	// Start method begin/end brackets and one statement of content = 3 statements - total = 7
     public void start(javafx.stage.Stage stage) {
     	javafx.stage.StageBuilder.create().title("Cerner and First Hand").scene(javafx.scene.SceneBuilder.create().root(
     			javafx.scene.layout.StackPaneBuilder.create()
@@ -1883,7 +1883,7 @@ public class LogoPuzzle extends javafx.application.Application {
         		).camera(new javafx.scene.PerspectiveCamera()).width(570).height(570).depthBuffer(true).build()).build().show();
     }
     
-    // moveOrFlip method begin/end brackets and 10 statements of content = 10 statements - total = 16
+    // moveOrFlip method begin/end brackets and 10 statements of content = 10 statements - total = 17
     private static void moveOrFlipTile(int tileIndex, javafx.scene.input.MouseEvent e) {
 		if (e.getButton() == javafx.scene.input.MouseButton.PRIMARY) {
         	int targetPos = emptyPos;
@@ -1910,7 +1910,7 @@ public class LogoPuzzle extends javafx.application.Application {
     	}
     }
 
-    // main method being/end brackets and 1 statement of content = 3 statements - total = 19
+    // main method being/end brackets and 1 statement of content = 3 statements - total = 20
 	public static void main(String[] args) {
         launch(args);
     }
