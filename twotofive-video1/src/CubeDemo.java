@@ -23,6 +23,7 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.SceneBuilder;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.StackPaneBuilder;
 import javafx.scene.paint.Color;
@@ -33,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageBuilder;
 import javafx.util.Duration;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseButton;
 
 public class CubeDemo extends Application {
 	private static int[] tilePos = {0,1,2,3,4,5,6,7};
@@ -53,7 +55,7 @@ public class CubeDemo extends Application {
 	        .translateX(-0.5 * (double) 175)
 	        .translateY(0.5 * ((double) 175 - (double) 20))
 	        .rotationAxis(Rotate.X_AXIS)
-	        .rotate(93)
+	        .rotate(90)
 	        .build(),
 	        RectangleBuilder.create() // right face
 	        .width((double) 20).height((double) 175)
@@ -61,7 +63,7 @@ public class CubeDemo extends Application {
 	        .translateX(0.5 * ((double) 175-(double) 20))
 	        .translateY(-0.5 * (double) 175)
 	        .rotationAxis(Rotate.Y_AXIS)
-	        .rotate(93)
+	        .rotate(90)
 	        .build(),
 	        RectangleBuilder.create() // left face
 	        .width((double) 20).height((double) 175)
@@ -69,7 +71,7 @@ public class CubeDemo extends Application {
 	        .translateX(-0.5 * ((double) 175+(double) 20))
 	        .translateY(-0.5 * ((double) 175))
 	        .rotationAxis(Rotate.Y_AXIS)
-	        .rotate(93)
+	        .rotate(90)
 	        .build(),
 	        RectangleBuilder.create() // top face
 	        .width((double) 175).height((double) 20)
@@ -77,7 +79,7 @@ public class CubeDemo extends Application {
 	        .translateX(-0.5 * (double) 175)
 	        .translateY(-0.5 * ((double) 175+(double) 20))
 	        .rotationAxis(Rotate.X_AXIS)
-	        .rotate(93)
+	        .rotate(90)
 	        .build(),
 	        RectangleBuilder.create() // front face
 	        .width((double) 175).height((double) 175)
@@ -87,51 +89,50 @@ public class CubeDemo extends Application {
 	        .translateZ(-0.5 * (double) 20)
 	        .build()
 	}))
-	.onMouseClicked(e ->  {createAnimation(i).play();})
+	.onMouseClicked(e ->  moveOrFlipTile(i, e))
 	.translateX(i%3 * ((double) 175 + 2))
 	.translateY(i/3 * ((double) 175 + 2))
 	.build())
 	.collect(Collectors.toList());
 
     public void start(Stage stage) {
-
     	StageBuilder.create().title("Cerner and First Hand").scene(SceneBuilder.create().root(
         		StackPaneBuilder.create()
     			.layoutX(20)
     			.layoutY(20)
     			.alignment(Pos.TOP_LEFT)
     			.children(tiles)
+    			.style("-fx-background-color: cyan")
     			.build()
         		).camera(new PerspectiveCamera()).width(570).height(570).depthBuffer(true).build()).build().show();
-    	
     }
     
-    private static Animation createAnimation(int tileIndex) {
-    	int targetPos = emptyPos;
-    	int currentPos = tilePos[tileIndex];
-    	boolean currentlyFaceUp = tileFaceUp[tileIndex];
-    	ParallelTransition parallelTransition = new ParallelTransition(
+    private static void moveOrFlipTile(int tileIndex, MouseEvent e) {
+		boolean move = e.getButton() == MouseButton.SECONDARY;
+    	if (move) {
+        	int targetPos = emptyPos;
+        	int currentPos = tilePos[tileIndex];
         		TimelineBuilder.create().keyFrames(
 			        new KeyFrame(Duration.ZERO,
-			            new KeyValue(tiles.get(tileIndex).translateXProperty(), currentPos%3*175),
-			            new KeyValue(tiles.get(tileIndex).translateYProperty(), currentPos/3*175)),
+			            new KeyValue(tiles.get(tileIndex).translateXProperty(), currentPos%3*177),
+			            new KeyValue(tiles.get(tileIndex).translateYProperty(), currentPos/3*177)),
 			        new KeyFrame(Duration.seconds(1),
-			            new KeyValue(tiles.get(tileIndex).translateXProperty(), targetPos%3*175),
-			            new KeyValue(tiles.get(tileIndex).translateYProperty(), targetPos/3*175)))
-			    .build(),
-			    TimelineBuilder.create().keyFrames(
+			            new KeyValue(tiles.get(tileIndex).translateXProperty(), targetPos%3*177),
+			            new KeyValue(tiles.get(tileIndex).translateYProperty(), targetPos/3*177)))
+			    .build().play();
+            	emptyPos = currentPos;
+            	tilePos[tileIndex] = targetPos;
+    	} else {
+    		tileFaceUp[tileIndex] = !tileFaceUp[tileIndex];
+		    TimelineBuilder.create().keyFrames(
 				    new KeyFrame(Duration.ZERO,
 				        new KeyValue(tiles.get(tileIndex).rotationAxisProperty(), ((tileIndex/3-(tileIndex%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS),
-				        new KeyValue(tiles.get(tileIndex).rotateProperty(), currentlyFaceUp ? 0d : 180d)),
+				        new KeyValue(tiles.get(tileIndex).rotateProperty(), !tileFaceUp[tileIndex] ? 0d : 180d)),
 				    new KeyFrame(Duration.seconds(1),
 				        new KeyValue(tiles.get(tileIndex).rotationAxisProperty(), ((tileIndex/3-(tileIndex%3)) & 1) == 1 ? Rotate.X_AXIS : Rotate.Y_AXIS),
-				        new KeyValue(tiles.get(tileIndex).rotateProperty(), currentlyFaceUp ? 180d : 360d)))
-				.build());
-    	
-    	tileFaceUp[tileIndex] = !tileFaceUp[tileIndex];
-    	emptyPos = currentPos;
-    	tilePos[tileIndex] = targetPos;
-		return parallelTransition;
+				        new KeyValue(tiles.get(tileIndex).rotateProperty(), !tileFaceUp[tileIndex] ? 180d : 360d)))
+				.build().play();
+    	}
     }
 
 	public static void main(String[] args) {
