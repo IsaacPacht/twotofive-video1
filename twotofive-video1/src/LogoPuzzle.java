@@ -2,7 +2,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Base64;
 
 // Class declaration and two static imports = 3 statements - total = 3
-public class CubeDemo extends javafx.application.Application {
+public class LogoPuzzle extends javafx.application.Application {
 	private static int emptyPos = 8, tilePos[] = {0,1,2,3,4,5,6,7}, tileFaceUp[] = {1,1,1,1,1,1,1,1};
 
 	private static String[] firsthandImages = {
